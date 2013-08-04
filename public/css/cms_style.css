@@ -1,0 +1,112 @@
+body {
+  margin: 0px;
+  padding: 0px;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: black;
+  color: white; }
+
+header {
+  background: black;
+  height: 50px;
+  padding: 0px;
+  margin: 0px; }
+
+a {
+  text-transform: none;
+  text-decoration: none;
+  color: white; }
+  a:hover {
+    color: red; }
+
+ul {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px; }
+
+nav {
+  margin: 0 auto;
+  width: 800px; }
+  nav ul a {
+    height: 50px;
+    line-height: 50px;
+    font-size: 16px;
+    color: #cecece;
+    overflow: hidden; }
+    nav ul a:hover {
+      color: white; }
+    nav ul a li {
+      display: inline-block;
+      margin: 0px 0px 0px 0px;
+      padding: 0px 5px 0px 5px;
+      border-bottom: 0px; }
+  nav ul .active {
+    background-color: blue;
+    color: white; }
+
+fieldset {
+  border: 0; }
+
+input:not([type=submit]):not([type=file]) {
+  border: 1px solid white; }
+
+#container {
+  margin: 0 auto; }
+
+#container_users, #container_assets {
+  padding: 10px 10px;
+  width: 100%;
+  background-color: #1d1d1d; }
+  #container_users a, #container_assets a {
+    display: inline-block;
+    margin: 0px;
+    height: 100%; }
+  #container_users ul li, #container_assets ul li {
+    margin-bottom: 2px; }
+
+#container_portfolios {
+  padding: 10px 10px;
+  width: 100%;
+  background-color: #57e5f5; }
+
+.toggle {
+  height: 100%;
+  width: 5px;
+  background-color: red; }
+
+.groups {
+  width: 600px;
+  margin: 0 auto; }
+
+.signin_box {
+  margin: 0 auto;
+  width: 300px; }
+  .signin_box #email, .signin_box #password {
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 10px; }
+  .signin_box .cms_login_button {
+    margin-top: 10px;
+    width: 30%; }
+
+.asset_list {
+  width: 100%;
+  height: auto; }
+  .asset_list .asset {
+    display: inline-block; }
+
+.video_item {
+  display: inline; }
+
+.setting-item li {
+  display: inline; }
+
+.show {
+  display: block; }
+
+.hide {
+  display: none; }
+
+#logout {
+  position: fixed;
+  top: 10px;
+  right: 40px; }
