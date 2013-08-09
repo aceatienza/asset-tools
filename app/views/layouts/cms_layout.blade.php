@@ -2,7 +2,6 @@
 <html>
 <head>
 	{{ stylesheet('cms_style.css') }}
-	<script data-main="../js/main.js" src="../js/require.js"></script>
 </head>
 <body>
 	<div id="container">
@@ -39,5 +38,8 @@
 		@yield('content')
 
 	</div>
+	
+	<!-- Load our precious javascript -->
+	<script data-main="/js/main.js" src="/js/require.js"></script>
 </body>
 </html>

@@ -2,20 +2,16 @@
 
 @section('content')
 
-{{ Form::model($asset, array('method' => 'PATCH', 'route' => array('control.asset.update', $asset->id))) }}
+{{ Form::model($asset, array('method' => 'PATCH', 'class' => 'node', 'route' => array('control.asset.update', $asset->id))) }}
     <ul>
         <li>
             {{ Form::label('name', 'Name:') }}
             {{ Form::text('name') }}
         </li>
 
-        @if(isset($asset->path))
-            <li>
-                <img src="{{ $asset->path.'/'.$asset->filename }}" alt="">
-            </li>
-
-        @endif
-
+        <li>
+            @include('assets.asset')
+        </li>
 
         <h3>Is in these portfolios...</h3>
         @foreach ($asset->portfolios as $portfolio)
@@ -34,7 +30,7 @@
     </ul>
 {{ Form::close() }}
 
-{{ Form::open(array('method' => 'DELETE', 'route' => array('control.asset.destroy', $asset->id))) }}
+{{ Form::open(array('method' => 'DELETE', 'class' => 'node', 'route' => array('control.asset.destroy', $asset->id))) }}
     {{ Form::submit('Delete', array('class' => 'btn btn-danger')) }}
 {{ Form::close() }}
 

@@ -111,16 +111,25 @@ Route::group(array('prefix' => 'control', 'before' => 'admin'), function()
     Route::post('edit', 'CmsController@edit');
 
     Route::resource('user', 'UserController');
-    Route::get('users', array('as' => 'users'), 'UserController@index');
+    Route::get('users', array('as' => 'users', 'uses' => 'UserController@index'));
     Route::get('user/confirm/{code}', 'UserController@getConfirm');
     Route::get('user/reset/{token}', 'UserController@getReset');
 
     Route::resource('portfolio', 'PortfolioController');
-    Route::get('portfolios', array('as' => 'portfolios'), 'PortfolioController@index');
+    Route::get('portfolios', array('as' => 'portfolios', 'uses' => 'PortfolioController@index'));
+
 
     Route::resource('asset', 'AssetsController');
-    Route::get('assets', array('as' => 'assets'), 'AssetsController@index');    
+    Route::get('assets', 'AssetsController@index');
+    // Route::get('asset', array('as' => 'control.asset.index', 'uses' => 'AssetsController@index'));
+    // Route::get('asset/{asset}/edit', array('as' => 'control.asset.edit', 'uses' => 'AssetsController@edit'));
+    // Route::put('asset/{asset}', array('as' => 'control.asset.update', 'uses' => 'AssetsController@update'));
+    // Route::delete('asset/{asset}', array('as' => 'control.asset.destroy', 'uses' => 'AssetsController@destroy')); 
+    // Route::post('asset', array('as' => 'control.asset.store', 'uses' => 'AssetsController@store'));
+    // Route::get('asset/create', array('as' => 'control.asset.create', 'uses' => 'AssetsController@create'));  // works
+    Route::get('assets/vimeo', array('as' => 'vimeo', 'uses' => 'AssetsController@addVimeo'));
 
+    
     // User for ajax upload
     Route::post('upload', 'AssetsController@postUpload');
 

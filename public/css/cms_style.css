@@ -6,7 +6,6 @@ body {
   color: white; }
 
 header {
-  background: black;
   height: 50px;
   padding: 0px;
   margin: 0px; }
@@ -18,7 +17,7 @@ a {
   a:hover {
     color: red; }
 
-ul {
+ul, ol {
   list-style-type: none;
   padding: 0px;
   margin: 0px; }
@@ -44,10 +43,9 @@ nav {
     color: white; }
 
 fieldset {
-  border: 0; }
-
-input:not([type=submit]):not([type=file]) {
-  border: 1px solid white; }
+  border: 0;
+  margin: 0;
+  padding: 0; }
 
 #container {
   margin: 0 auto; }
@@ -77,6 +75,56 @@ input:not([type=submit]):not([type=file]) {
   width: 600px;
   margin: 0 auto; }
 
+/* consistent forms */
+form {
+  margin: 0 auto; }
+
+label {
+  line-height: 28px;
+  height: 30px;
+  width: 140px;
+  text-align: right;
+  display: inline-block; }
+
+input:not([type=radio]):not([type=file]):not(button) {
+  padding: 4px 2px; }
+  input:not([type=radio]):not([type=file]):not(button):focus, input:not([type=radio]):not([type=file]):not(button):hover {
+    box-shadow: inset 0 1.5px 1px rgba(190, 190, 190, 0.4), 0 0 0 2px #e6f2f9; }
+
+input[type=text] {
+  width: 300px; }
+
+input:not([type=submit]):not([type=file]) {
+  border: 1px solid white; }
+
+.node {
+  clear: both;
+  display: block;
+  width: 600px;
+  padding: 14px;
+  height: 100%; }
+  .node li {
+    margin-top: 5px;
+    display: block; }
+  .node input[type=submit], .node button {
+    clear: both;
+    margin-left: 145px;
+    margin-top: 40px;
+    line-height: 30px;
+    height: 30px;
+    width: 125px;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer; }
+
+.role {
+  clear: both;
+  margin-left: 100px; }
+  .role label, .role input {
+    margin-left: 10px;
+    float: none;
+    width: 50px; }
+
 .signin_box {
   margin: 0 auto;
   width: 300px; }
@@ -88,23 +136,62 @@ input:not([type=submit]):not([type=file]) {
     margin-top: 10px;
     width: 30%; }
 
-.asset_list {
+.assetList {
   width: 100%;
   height: auto; }
-  .asset_list .asset {
-    display: inline-block; }
+  .assetList li {
+    display: inline-block;
+    cursor: pointer; }
+
+.assetsInPortfolio .assetItem {
+  display: inline-block;
+  position: relative; }
+  .assetsInPortfolio .assetItem .delete-item {
+    position: absolute;
+    top: 0;
+    right: 0; }
 
 .video_item {
-  display: inline; }
+  display: inline-block;
+  cursor: pointer;
+  padding: 10px;
+  position: relative;
+  overflow: hidden; }
 
-.setting-item li {
-  display: inline; }
+.delete-item {
+  font-weight: bold;
+  color: red;
+  display: none;
+  cursor: pointer; }
+
+.new-service {
+  opacity: 0; }
 
 .show {
   display: block; }
 
 .hide {
   display: none; }
+
+.highlight {
+  transition: opacity 0.5s;
+  opacity: 0.5;
+  border-color: blue;
+  z-index: -1; }
+
+.dropzoneContainer {
+  margin: 0 auto;
+  position: relative;
+  width: 200px;
+  height: 150px; }
+
+.dropzone {
+  text-align: center;
+  line-height: 150px;
+  background-color: grey; }
+
+.asset-list li {
+  display: inline-block; }
 
 #logout {
   position: fixed;

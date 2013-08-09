@@ -1,7 +1,10 @@
 @extends('layouts.cms_layout')
 
 @section('content')
-	{{ Form::model($user, array('route' => array('control.user.update', $user->id))) }}
+	{{ Form::model($user, array(
+		'class' => 'node',
+		'route' => array('control.user.update', $user->id)
+	)) }}
 		<ul>
 			<li>
 				{{ Form::label('username', 'Username') }}

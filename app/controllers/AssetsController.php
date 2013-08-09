@@ -36,65 +36,122 @@ class AssetsController extends BaseController {
      */
     public function create()
     {
-        $form_opts = array(
-                'url' => 'control/asset',
-                'class'  => '',
-                'name'   => 'newAsset',
-                'files'  => true
-        );
+        // TODO: complete the form for when js is not enabled
+        // if($id = Input::get('id')) {
+        //     dd($id);
+        // }
+        // OR
+        // if( $query = Request::server('QUERY_STRING') ) {
+        //     parse_str($query, $output);
+        //     dd($output);
+        // }
+
         $portfolio_list = Portfolio::lists('client_name', 'id');
 
+        /** TODO: create a separate page to add a Vimeo video in case js in inactive **/
 
-        /***  AJAXIFY FROM HERE so that the page loads even if Vimeo isn't working ***/
+        /***  REFACTOR INTO own class FROM HERE so that the page loads even if Vimeo isn't working? ***/
 
         $vimeokey = DB::table('cms')->where('name', 'vimeo_key')->pluck('value');
         $vimeosecret = DB::table('cms')->where('name', 'vimeo_secret')->pluck('value');
         $vimeoid = DB::table('cms')->where('name', 'vimeo_id')->pluck('value');
+        $videoList = [];
         // dd($vimeokey, $vimeosecret, $vimeoid);
 
+        $cacheFolder = storage_path().'/cache';
+
         $vimeo = new Vimeo($vimeokey, $vimeosecret);
-        // dd($vimeo);
+        $vimeo->enableCache(Vimeo::CACHE_FILE, $cacheFolder, 300);  // Vimeo best-practice
 
-        $pageNo = 1;  // or set as separate toggle
-        $perPage = 20;
+        // try to reach Vimeo
+        try {
+            $pageNo = 1;  // or set as separate toggle
+            $perPage = 20;
 
-        $vimeoVideos = $vimeo->call('vimeo.videos.getUploaded', array(
-                                        'user_id'       => $vimeoid,
-                                        'page'          => $pageNo,
-                                        'per_page'      => $perPage,
-                                        'full_response' => true
-        )); 
-        dd($vimeoVideos);
+            $vimeoVideos = $vimeo->call('vimeo.videos.getUploaded', array(
+                                            'user_id'       => $vimeoid,
+                                            'page'          => $pageNo,
+                                            'per_page'      => $perPage,
+                                            'full_response' => true
+            )); 
+        }
+        catch (VimeoAPIException $e) {
+            echo "Encountered a Vimeo API error -- code {$e->getCode()} - {$e->getMessage()}";
+        }
 
-        $videoList = [];
-
-        foreach ($vimeoVideos->videos->video as $video) {
-
-            // $videoInfo['thumbnail'] = $video->thumbnails->thumbnail[1]->_content;  // 0 small == '75', 1 medium == '150', 2 large == '360'
-            // $videoInfo['url'] = $video->urls->url[0]->_content;                     // video, use 1 for mobile
-            // $videoList[$video->id] = $videoInfo;
-
-            $videoList[$video->id] = array(
-                    'title'     => $video->title,
-                    'thumbnail' => $video->thumbnails->thumbnail[1]->_content,
-                    'url'       => $video->urls->url[0]->_content
-            );
+        if(isset($vimeoVideos)) {
+            foreach ($vimeoVideos->videos->video as $video) {
+                $videoList[$video->id] = array(
+                        'title'     => $video->title,
+                        'thumbnail' => $video->thumbnails->thumbnail[1]->_content,
+                        'url'       => $video->urls->url[0]->_content
+                );
+            }        
         }
 
         return View::make('assets.create')
                     ->with('portfolio_list', $portfolio_list)
-                    ->with('video_list', $videoList)
-                    ->with('form_opts', $form_opts);
+                    ->with('video_list', $videoList);
+    }
+
+    /**
+    *   Show the form to add a Vimeo video
+    *   @return  Response
+    */
+    public function addVimeo()
+    {
+        /***  REFACTOR INTO own class FROM HERE so that the page loads even if Vimeo isn't working? ***/
+
+        $vimeokey = DB::table('cms')->where('name', 'vimeo_key')->pluck('value');
+        $vimeosecret = DB::table('cms')->where('name', 'vimeo_secret')->pluck('value');
+        $vimeoid = DB::table('cms')->where('name', 'vimeo_id')->pluck('value');
+        $videoList = [];
+        // dd($vimeokey, $vimeosecret, $vimeoid);
+
+        $cacheFolder = storage_path().'/cache';
+
+        $vimeo = new Vimeo($vimeokey, $vimeosecret);
+        $vimeo->enableCache(Vimeo::CACHE_FILE, $cacheFolder, 300);  // Vimeo best-practice
+
+        // try to reach Vimeo
+        try {
+            $pageNo = 1;  // or set as separate toggle
+            $perPage = 20;
+
+            $vimeoVideos = $vimeo->call('vimeo.videos.getUploaded', array(
+                                            'user_id'       => $vimeoid,
+                                            'page'          => $pageNo,
+                                            'per_page'      => $perPage,
+                                            'full_response' => true
+            )); 
+        }
+        catch (VimeoAPIException $e) {
+            echo "Encountered a Vimeo API error -- code {$e->getCode()} - {$e->getMessage()}";
+        }
+
+        if(isset($vimeoVideos)) {
+            foreach ($vimeoVideos->videos->video as $video) {
+                $videoList[$video->id] = array(
+                        'title'     => $video->title,
+                        'thumbnail' => $video->thumbnails->thumbnail[1]->_content,
+                        'url'       => $video->urls->url[0]->_content
+                );
+            }        
+        }
+
+        return View::make('assets.vimeo')->with('video_list', $videoList);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @return Response
+     * @return  Response
      */
     public function store()
     {
         $input = Input::all();
+        // dd($input);
+
         $validation = Validator::make($input, Asset::$rules);
 
         if ($validation->fails())
@@ -106,6 +163,7 @@ class AssetsController extends BaseController {
         } 
 
         $asset = Asset::create($input); 
+        // dd($asset);
 
         if(Input::hasFile('image')) {
             // dd(Input::all()); // WORKS
@@ -124,6 +182,8 @@ class AssetsController extends BaseController {
         //         // return Response::json('error', 400);
             }
         }
+
+        return Redirect::route('control.asset.edit', array($asset->id)); 
     }
 
     /**
@@ -181,7 +241,9 @@ class AssetsController extends BaseController {
     public function destroy($id)
     {
         $asset = $this->asset->find($id);
-        $asset->deleteFile();
+        if(isset($asset->path) && $asset->path != null){
+            $asset->deleteFile();
+        }
         $asset->delete();
 
         return Redirect::route('control.asset.index');

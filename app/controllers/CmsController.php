@@ -26,12 +26,6 @@ class CmsController extends BaseController {
     */
     public function show()
     {
-        $form_opts = array(
-            'url' => 'control/edit',
-            'class'  => '',
-            'name'   => 'settings'
-        ); 
-
         $currentSettings= [];
         $settings = DB::table('cms')->get();
         $deleteUrl = 'delete';
@@ -46,7 +40,6 @@ class CmsController extends BaseController {
         }
 
         return View::make('cms.settings')
-            ->with('form_opts', $form_opts)
             ->with('currentSettings', $currentSettings)
             ->with('deleteUrl', $deleteUrl);
     }

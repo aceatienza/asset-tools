@@ -45,6 +45,7 @@ class Portfolio extends Eloquent {
     }
     public function assets()
     {
-        return $this->belongsToMany('Asset');
+        return $this->belongsToMany('Models\Asset'); // works
+        // return $this->belongsToMany('Asset'); // doesn't work
     }
 }

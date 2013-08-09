@@ -2,55 +2,53 @@
 
 @section('content')
 
-    <h3>Settings</h3>
-
-    <div class="">
-
-        {{ Form::open($form_opts) }}
-            @if(empty($currentSettings))
-                <ul>
-                
-                    <li>
-                        {{ Form::label('vimeo_key') }}
-                        {{ Form::text('vimeo_key') }}
-                    </li>    
-                    <li>
-                        {{ Form::label('vimeo_secret') }}
-                        {{ Form::text('vimeo_secret') }}
-                    </li> 
-
-                </ul>
-            @endif
-            
+        {{ Form::open(array(
+            'url' => 'control/edit',
+            'class'  => 'node',
+            'name'   => 'settings'
+        )) }}
             <ul>
+                @if(empty($currentSettings))
+                        <li>
+                            {{ Form::label('vimeo_key') }}
+                            {{ Form::text('vimeo_key') }}
+                        </li>    
+                        <li>
+                            {{ Form::label('vimeo_secret') }}
+                            {{ Form::text('vimeo_secret') }}
+                        </li> 
+                @endif
+
                 @foreach ($currentSettings as $k => $v)
-                    <div class="setting-item">
-                        <li>        
-                            {{ Form::label($k) }}
+                <li class="setting-item">
+                           {{ Form::label($k) }}
                             {{ Form::text($k, $v)}}
-                        </li>
-                        <span class="delete-item hide"
+                        <!-- TODO: change to a sprite, png, or data uri -->
+                        <span class="delete-item"
                                 data-url="{{ $deleteUrl }}"
                                 data-name="{{ $k }}"
                                 data-value="{{ $v }}">X
                         </span>
-                    </div>
+                </li>
                 @endforeach
-            </ul>
 
-            <!-- css start off as display:none; js to toggle open -->
-            <br>
-            Add a new service (Google Analytics, Twitter, Facebook, etc)
-            <ul>
-                <li>
-                    {{ Form::label('service_name') }}
-                    {{ Form::text('name') }}
-                </li>
-                <li>
-                    {{ Form::label('service_value') }}
-                    {{ Form::text('value') }}
-                </li>
-            </ul>
+                <br>
+
+                <fieldset>
+                    <legend>
+                        {{ link_to('#', 'Add: (Google Analytics, Twitter, Facebook, etc)', array('id' => 'new-service')) }} 
+                    </legend>
+                    <ul class="new-service">
+                        <li>
+                            {{ Form::label('service_name') }}
+                            {{ Form::text('name') }}
+                        </li>
+                        <li>
+                            {{ Form::label('service_value') }}
+                            {{ Form::text('value') }}
+                        </li>
+                    </ul>
+                </fieldset>
 
                 @if ( Session::get('error') )
                     <div class="alert alert-error">{{{ Session::get('error') }}}</div>
@@ -59,9 +57,9 @@
                 @if ( Session::get('notice') )
                     <div class="alert">{{{ Session::get('notice') }}}</div>
                 @endif
-
+            <li>
             {{ Form::submit('Submit', array('class' => 'cms_submit_button') ) }}
+            </li>    
+            </ul>
         {{ Form::close() }}
-
-    </div>
 @stop

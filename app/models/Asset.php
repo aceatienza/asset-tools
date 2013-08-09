@@ -9,7 +9,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class Asset extends Eloquent {
 
 	protected $fillable  = array('active', 'order', 'filetype',
-		'filesize', 'path', 'width', 'height', 'name');
+		'filesize', 'path', 'width', 'height', 'name',
+    'vimeo_id', 'vimeo_title', 'vimeo_url', 'vimeo_thumbnail');
 	protected $guarded   = array('');
 	public static $rules = array(
 		 // 'file' => 'image|max:10000',
@@ -100,28 +101,28 @@ class Asset extends Eloquent {
   	/**
   	*	Add this Asset to a Portfolio
   	*/
-	public function addToPortfolio($portfolio_id)
-	{
-		$this->portfolios()->sync($portfolio_id);
-	}
+  	public function addToPortfolio($portfolio_id)
+  	{
+  		$this->portfolios()->sync($portfolio_id);
+  	}
 
-	/**
-	*	Remove files and folders if any
-	*   Is this necessary? if the resource is being deleted, shouldn't you just rmdir?
-	*/
-	public function deleteFile()
-	{
+  	/**
+  	*	Remove files and folders if any
+  	* Is this necessary? if the resource is being deleted, shouldn't you just rmdir?
+  	*/
+  	public function deleteFile()
+  	{
 
-		if(file_exists(public_path() . '/' . $this->path .'/'. $this->filename)) {
-			$dirPath = public_path() . $this->path;
+  		if(file_exists(public_path() . '/' . $this->path .'/'. $this->filename)) {
+  			$dirPath = public_path() . $this->path;
 
-			unlink($dirPath .'/'. $this->filename);
+  			unlink($dirPath .'/'. $this->filename);
 
-			if(file_exists($dirPath .'/'. $this->thumbname)) 
-				unlink($dirPath .'/'. $this->thumbname); 
+  			if(file_exists($dirPath .'/'. $this->thumbname)) 
+  				unlink($dirPath .'/'. $this->thumbname); 
 
-			rmdir($dirPath);
-		}
-	}
+  			rmdir($dirPath);
+  		}
+  	}
 
 }

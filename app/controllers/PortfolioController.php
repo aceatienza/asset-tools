@@ -1,5 +1,7 @@
 <?php
 
+use Models\Asset;
+
 class PortfolioController extends BaseController {
 
     protected $portfolio;
@@ -27,6 +29,7 @@ class PortfolioController extends BaseController {
     public function create()
     {
         return View::make('portfolios.create');
+        // TODO: add ability to add Assets while creating
     }
 
     /**
@@ -36,15 +39,9 @@ class PortfolioController extends BaseController {
      */
     public function store()
     {
-        // make sure to validate in the model and check for http:/ or add it in the model
-  //      'client_name' => string 'Nadaaa' (length=6)
-  // 'description' => string 'National Association of something something something' (length=53)
-  // 'date' => string '03-20-2000' (length=10)
-  // 'url' => string 'http://nadaaa.com' (length=17) 
         $input = Input::all();
-        // $portfolio = new Portfolio;
+        // TODO: add Validator
 
-        // $success = $portfolio->createNewPortfolio($input);
         $portfolio = $this->portfolio->create($input);
         if($portfolio) {
             // json response
@@ -52,8 +49,6 @@ class PortfolioController extends BaseController {
             // return View::make('portfolio.edit')->with('portfolio', $portfolio);
             return Redirect::route('control.portfolio.edit', array($portfolio->getId()) );
         }
-        // if $success give notice and append newly created portfolio to bottom of list, call show again
-        // can return with json_encode for ajax later on
     }
 
     /**
@@ -65,8 +60,8 @@ class PortfolioController extends BaseController {
     public function edit($id)
     {
         $portfolio = $this->portfolio->find($id);
-        // $portfolio_list = Portfolio::lists('client_name', 'id');
-        $assets = Asset::all();
+        $assets = Asset::all();  
+        $asset_list =  Asset::lists('name', 'id');
 
         if (is_null($portfolio))
         {
@@ -74,7 +69,8 @@ class PortfolioController extends BaseController {
         }
 
         return View::make('portfolios.edit', compact('portfolio'))
-            ->with('assets', $assets);
+            ->with('assets', $assets)
+            ->with('assetlist', $asset_list);
     }
 
     /**
@@ -87,12 +83,14 @@ class PortfolioController extends BaseController {
     {
         $input = array_except(Input::all(), '_method');
         $validation = Validator::make($input, Portfolio::$rules);
+        
+        $assets = Input::get('asset_ids');
 
         if ($validation->passes())
         {
             $portfolio = $this->portfolio->find($id);
-            // $portfolio->portfolios()->attach($input['Portfolios']);
-            $portfolio->update($input);
+            $portfolio->assets()->sync($assets);  // already checks to see if already in table
+            $portfolio->update($input);  
 
             return Redirect::route('control.portfolio.edit', array($id));
         }
