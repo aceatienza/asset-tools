@@ -3,6 +3,8 @@ Application to hold images, videos, files, etc. about ongoing or completed proje
 
 ## Tech stack ##
 PHP  
+Javascript
+Require.js
 Laravel  
 MySQL  
 PHPUnit  
